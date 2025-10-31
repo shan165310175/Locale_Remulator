@@ -95,6 +95,8 @@ VOID FreeStringInternal(LPVOID pBuffer/*ecx*/)
 
 LPWSTR MultiByteToWideCharInternal(LPCSTR lstr, UINT CodePage)
 {
+	if (!lstr)
+		return NULL;
 	int lsize = lstrlenA(lstr)/* size without '\0' */, n = 0;
 	int wsize = (lsize + 1) << 1;
 	LPWSTR wstr = (LPWSTR)HeapAlloc(Original.hHeap, 0, wsize);
@@ -289,7 +291,22 @@ HWND WINAPI HookCreateWindowExA(
 	DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle,
 	int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
 {
-	LPCWSTR wstrlpClassName = lpClassName ? MultiByteToWideCharInternal(lpClassName) : NULL;
+	bool bAtomClassName = false;
+	LPCWSTR wstrlpClassName = NULL;
+	if (lpClassName) 
+	{
+		// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createwindowexw
+		if ((ULONG_PTR)lpClassName < 65536) 
+		{
+			wstrlpClassName = (LPCWSTR)lpClassName;
+			bAtomClassName = true;
+		}
+		else 
+		{
+			wstrlpClassName = MultiByteToWideCharInternal(lpClassName);
+		}
+	}
+
 	LPCWSTR wstrlpWindowName = lpWindowName ? MultiByteToWideCharInternal(lpWindowName) : NULL;
 	HWND ret = CreateWindowExW(
 		dwExStyle,
@@ -305,7 +322,7 @@ HWND WINAPI HookCreateWindowExA(
 		hInstance,
 		lpParam
 	);
-	if (wstrlpClassName)
+	if (wstrlpClassName && !bAtomClassName)
 	{
 		FreeStringInternal((LPVOID)wstrlpClassName);
 	}

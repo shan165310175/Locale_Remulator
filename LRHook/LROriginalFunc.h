@@ -317,3 +317,13 @@ UINT (WINAPI* OriginalGetConsoleCP)(VOID)
 static
 UINT (WINAPI* OriginalGetConsoleOutputCP)(VOID)
 	= GetConsoleOutputCP;
+
+static
+BOOL (WINAPI *OriginalSetConsoleCP)(
+	_In_ UINT wCodePageID
+) = SetConsoleCP;
+
+static 
+BOOL (WINAPI* OriginalSetConsoleOutputCP)(
+	_In_ UINT wCodePageID
+) = SetConsoleOutputCP;

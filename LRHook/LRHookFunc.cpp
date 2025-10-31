@@ -132,6 +132,8 @@ void AttachFunctions()
 	DetourAttach(&(PVOID&)OriginalGetOEMCP, HookGetOEMCP);
 	DetourAttach(&(PVOID&)OriginalGetConsoleCP, HookGetConsoleCP);
 	DetourAttach(&(PVOID&)OriginalGetConsoleOutputCP, HookGetConsoleOutputCP);
+	DetourAttach(&(PVOID&)OriginalSetConsoleCP, HookSetConsoleCP);
+	DetourAttach(&(PVOID&)OriginalSetConsoleOutputCP, HookSetConsoleOutputCP);
 	DetourAttach(&(PVOID&)OriginalGetCPInfo, HookGetCPInfo);
 	DetourAttach(&(PVOID&)OriginalGetThreadLocale, HookGetThreadLocale);
 	DetourAttach(&(PVOID&)OriginalGetSystemDefaultUILanguage, HookGetSystemDefaultUILanguage);
@@ -217,6 +219,10 @@ void DetachFunctions()
 {
 	DetourDetach(&(PVOID&)OriginalGetACP, HookGetACP);
 	DetourDetach(&(PVOID&)OriginalGetOEMCP, HookGetOEMCP);
+	DetourDetach(&(PVOID&)OriginalGetConsoleCP, HookGetConsoleCP);
+	DetourDetach(&(PVOID&)OriginalGetConsoleOutputCP, HookGetConsoleOutputCP);
+	DetourDetach(&(PVOID&)OriginalSetConsoleCP, HookSetConsoleCP);
+	DetourDetach(&(PVOID&)OriginalSetConsoleOutputCP, HookSetConsoleOutputCP);
 	DetourDetach(&(PVOID&)OriginalGetCPInfo, HookGetCPInfo);
 	DetourDetach(&(PVOID&)OriginalGetThreadLocale, HookGetThreadLocale);
 	DetourDetach(&(PVOID&)OriginalGetSystemDefaultUILanguage, HookGetSystemDefaultUILanguage);
@@ -373,6 +379,17 @@ UINT WINAPI HookGetConsoleOutputCP(VOID) {
 	return settings.CodePage;
 }
 
+BOOL WINAPI HookSetConsoleCP(
+	_In_ UINT wCodePageID
+) {
+	return OriginalSetConsoleCP(wCodePageID);
+}
+
+BOOL WINAPI HookSetConsoleOutputCP(
+	_In_ UINT wCodePageID
+) {
+	return OriginalSetConsoleOutputCP(wCodePageID);
+}
 
 BOOL WINAPI HookGetCPInfo(
 	UINT       CodePage,

@@ -309,3 +309,11 @@ static int(WINAPI* OriginalGetLocaleInfoW)(
 	_Out_writes_opt_(cchData) LPWSTR lpLCData,
 	_In_ int cchData
 ) = GetLocaleInfoW;
+
+static
+UINT (WINAPI* OriginalGetConsoleCP)(VOID)
+	= GetConsoleCP;
+
+static
+UINT (WINAPI* OriginalGetConsoleOutputCP)(VOID)
+	= GetConsoleOutputCP;

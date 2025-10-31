@@ -26,6 +26,9 @@ void AttachFunctions();
 void DetachFunctions();
 UINT WINAPI HookGetACP(void);
 UINT WINAPI HookGetOEMCP(void);
+UINT WINAPI HookGetConsoleCP(VOID);
+UINT WINAPI HookGetConsoleOutputCP(VOID);
+
 BOOL WINAPI HookGetCPInfo(
 	UINT       CodePage,
 	LPCPINFO  lpCPInfo

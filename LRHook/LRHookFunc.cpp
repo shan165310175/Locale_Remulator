@@ -130,6 +130,8 @@ void AttachFunctions()
 {
 	DetourAttach(&(PVOID&)OriginalGetACP, HookGetACP);
 	DetourAttach(&(PVOID&)OriginalGetOEMCP, HookGetOEMCP);
+	DetourAttach(&(PVOID&)OriginalGetConsoleCP, HookGetConsoleCP);
+	DetourAttach(&(PVOID&)OriginalGetConsoleOutputCP, HookGetConsoleOutputCP);
 	DetourAttach(&(PVOID&)OriginalGetCPInfo, HookGetCPInfo);
 	DetourAttach(&(PVOID&)OriginalGetThreadLocale, HookGetThreadLocale);
 	DetourAttach(&(PVOID&)OriginalGetSystemDefaultUILanguage, HookGetSystemDefaultUILanguage);
@@ -357,10 +359,20 @@ UINT WINAPI HookGetACP(void)
 {
 	return settings.CodePage;
 }
+
 UINT WINAPI HookGetOEMCP(void)
 {
 	return settings.CodePage;
 }
+
+UINT WINAPI HookGetConsoleCP(VOID) {
+	return settings.CodePage;
+}
+
+UINT WINAPI HookGetConsoleOutputCP(VOID) {
+	return settings.CodePage;
+}
+
 
 BOOL WINAPI HookGetCPInfo(
 	UINT       CodePage,
